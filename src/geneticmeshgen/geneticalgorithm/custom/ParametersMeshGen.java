@@ -17,4 +17,6 @@ public class ParametersMeshGen extends Parameters {
     public float organismVertexMutationRate;
     public float organismUVMutationRate;
     public int organismColorMutationRate;
+    
+    public int organismNumVertexes;
 }

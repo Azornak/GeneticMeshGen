@@ -15,14 +15,15 @@ import geneticmeshgen.geneticalgorithm.custom.OrganismMeshGen;
 import geneticmeshgen.geneticalgorithm.OrganismTest;
 import geneticmeshgen.geneticalgorithm.Parameters;
 import geneticmeshgen.geneticalgorithm.Population;
+import geneticmeshgen.geneticalgorithm.custom.ParametersMeshGen;
 import java.util.Random;
 import processing.core.*;
 
-public class Main extends PApplet{
+public class Main extends PApplet implements EvaluationCallback {
     PShape p;
     
     Population pop;
-    Parameters params;
+    ParametersMeshGen params;
     
     String testString = "Hello World!";
     
@@ -30,18 +31,26 @@ public class Main extends PApplet{
     public void settings(){
         size(1000, 1000, P3D);
         
-        params = new Parameters();
+        params = new ParametersMeshGen();
         
         params.populationSize = 100;
         params.evolutionMutationChance = 0.2f;
         params.evolutionCrossoverChance = 0.4f;
-        
         params.evolutionKeepBest = true;
         params.evolutionElitismCount = 5;
         
+        params.organismColorMutationRate = 100;
+        params.organismTextureWidth = 128;
+        params.organismTextureHeight = 128;
+        params.organismUVMutationRate = 0.01f;
+        params.organismVertexMutationRate = 0.05f;
+        
+        params.organismNumVertexes = 100;
+        
         params.random = new Random();
         
-        pop = new Population(params,OrganismTest.template(testString.length()));
+        pop = new Population(params,OrganismMeshGen.template(params));
+        pop.setCallback(this);
     }
     
     @Override
@@ -63,7 +72,7 @@ public class Main extends PApplet{
         background(0);
         translate(width/2.0f, height/2.0f);
         shape(p);
-        
+        /*
         pop.epoch(new EvaluationCallback() {
 
             @Override
@@ -80,13 +89,17 @@ public class Main extends PApplet{
                 return fitness;
             }
         });
-        
-        Organism best = pop.getBestOrganism();
-        System.out.println("#" + pop.getGeneration() + " | Fitness: " + best.getFitness() + " | " + ((OrganismTest)best).getString());
+        */
+
     }
     
     
     public static void main(String args[]) {
         PApplet.main(new String[] { "--present", "Main" });
+    }
+
+    @Override
+    public void finishedEvaluation(int generation, Organism best) {
+        System.out.println("#" + generation + " | Fitness: " + best.getFitness());
     }
 }

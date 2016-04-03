@@ -6,6 +6,7 @@
 package geneticmeshgen.geneticalgorithm.custom;
 
 import geneticmeshgen.geneticalgorithm.Organism;
+import geneticmeshgen.geneticalgorithm.OrganismTest;
 import geneticmeshgen.geneticalgorithm.Parameters;
 import geneticmeshgen.utils.MathUtils;
 import java.util.ArrayList;
@@ -35,11 +36,23 @@ public class OrganismMeshGen extends Organism {
         this.texture = new int[parameters.organismTextureWidth * parameters.organismTextureHeight];
     }
     
-    public OrganismMeshGen(OrganismMeshGen copy,Parameters params)
-    {
-        super(params);
+    public static OrganismMeshGen template(ParametersMeshGen parameters) {
+        OrganismMeshGen org = new OrganismMeshGen(parameters);
         
+        for(int i=0;i<parameters.organismNumVertexes;i++) {
+            org.vertexes.add(0.0f);
+            org.vertexes.add(0.0f);
+            org.vertexes.add(0.0f);
+            
+            org.uvs.add(0.0f);
+            org.uvs.add(0.0f);
+        }
         
+        for(int i=0;i<org.texture.length;i++) {
+            org.texture[i] = 0;
+        }
+        
+        return org;
     }
     
     public Float[] getVertexes() {
@@ -75,6 +88,73 @@ public class OrganismMeshGen extends Organism {
         }
         
         return newOrg;
+    }
+
+    @Override
+    public Organism[] crossover(Organism other) {
+        OrganismMeshGen mate = (OrganismMeshGen)other;
+
+        OrganismMeshGen a = this.clone();
+        OrganismMeshGen b = mate.clone();
+        
+        // 1 point crossover
+        
+        // Vertexes
+        int max = Math.min(a.vertexes.size(),b.vertexes.size());
+        int p = parameters.random.nextInt(max);
+        
+        for(int i=0;i<p;i++) {
+            a.vertexes.add(this.vertexes.get(i));
+        }
+        for(int i=p;i<max;i++) {
+            a.vertexes.add(mate.vertexes.get(i));
+        }
+        
+        for(int i=0;i<p;i++) {
+            b.vertexes.add(mate.vertexes.get(i));
+        }
+        for(int i=p;i<max;i++) {
+            b.vertexes.add(this.vertexes.get(i));
+        }
+        
+        // UVs
+        max = Math.min(a.uvs.size(),b.uvs.size());
+        p = parameters.random.nextInt(max);
+        
+        for(int i=0;i<p;i++) {
+            a.uvs.add(this.uvs.get(i));
+        }
+        for(int i=p;i<max;i++) {
+            a.uvs.add(mate.uvs.get(i));
+        }
+        
+        for(int i=0;i<p;i++) {
+            b.uvs.add(mate.uvs.get(i));
+        }
+        for(int i=p;i<max;i++) {
+            b.uvs.add(this.uvs.get(i));
+        }
+        
+        // Texture
+        max = Math.min(a.texture.length,b.texture.length);
+        p = parameters.random.nextInt(max);
+        
+        for(int i=0;i<p;i++) {
+            a.texture[i] = this.texture[i];
+        }
+        for(int i=p;i<max;i++) {
+            a.texture[i] = mate.texture[i];
+        }
+        
+        for(int i=0;i<p;i++) {
+            b.texture[i] = mate.texture[i];
+        }
+        for(int i=p;i<max;i++) {
+            b.texture[i] = this.texture[i];
+        }
+       
+        
+        return new Organism[] { a, b };
     }
 
     

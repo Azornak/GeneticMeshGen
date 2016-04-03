@@ -10,5 +10,5 @@ package geneticmeshgen.geneticalgorithm;
  * @author JPiolho
  */
 public interface EvaluationCallback {
-    float evaluateOrganism(Organism organism);
+    void finishedEvaluation(int generation,Organism best);
 }

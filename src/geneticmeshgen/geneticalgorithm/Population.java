@@ -21,6 +21,10 @@ public class Population {
     
     private Organism bestOrganismLastGeneration;
     
+    private EvaluationCallback callback;
+    
+    private int curOrganism = 0;
+    
     
     public Population(Parameters params,Organism template) {        
         this.parameters = params;
@@ -35,17 +39,12 @@ public class Population {
         this.generation = 0;
     }
     
+    public void setCallback(EvaluationCallback callback) {
+        this.callback = callback;
+    }
     
-    public void epoch(EvaluationCallback evaluation) {
-
-        // Evaluate all the organisms
-        for(int i=0;i<organisms.size();i++) {
-            Organism org = organisms.get(i);
-            float fitness = evaluation.evaluateOrganism(org);
-            
-            org.setFitness(fitness);
-        }
-        
+    
+    private void finishEpoch() {
         // Sort by fitness
         organisms.sort(new Comparator<Organism>() {
 
@@ -92,9 +91,27 @@ public class Population {
             }
         }
         
+        if(this.callback != null) {
+            this.callback.finishedEvaluation(generation, bestOrganismLastGeneration);
+        }
         
         generation++;
     }
+    
+    
+    public Organism getNextValidationOrganism() {
+        return this.organisms.get(curOrganism);
+    }
+    
+    public void finishValidationOrganism(float fitness) {
+        this.organisms.get(curOrganism).setFitness(fitness);
+        curOrganism++;
+        
+        if(curOrganism >= this.organisms.size()) {
+            finishEpoch();
+        }
+    }
+    
     
     
     public Organism getBestOrganism() {
