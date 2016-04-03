@@ -11,7 +11,7 @@
 
 import geneticmeshgen.geneticalgorithm.EvaluationCallback;
 import geneticmeshgen.geneticalgorithm.Organism;
-import geneticmeshgen.geneticalgorithm.OrganismMeshGen;
+import geneticmeshgen.geneticalgorithm.custom.OrganismMeshGen;
 import geneticmeshgen.geneticalgorithm.OrganismTest;
 import geneticmeshgen.geneticalgorithm.Parameters;
 import geneticmeshgen.geneticalgorithm.Population;

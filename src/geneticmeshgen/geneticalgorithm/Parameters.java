@@ -28,7 +28,4 @@ public class Parameters {
     
     public int populationSize;
     
-    
-    
-    public int organismTextureWidth,organismTextureHeight;
 }

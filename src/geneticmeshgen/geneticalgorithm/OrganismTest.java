@@ -65,7 +65,7 @@ public class OrganismTest extends Organism {
         return this.string;
     }
     
-    
+    @Override
     public OrganismTest clone() {
         OrganismTest myClone = new OrganismTest(parameters);
         myClone.string = this.string;
