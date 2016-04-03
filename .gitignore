@@ -27,3 +27,7 @@ obj/
 [Rr]elease*/
 _ReSharper*/
 [Tt]est[Rr]esult*
+/build/
+nbproject/private/private.properties
+nbproject/private/private.xml
+nbproject/private/private.properties
