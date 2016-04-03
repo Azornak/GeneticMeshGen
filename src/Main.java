@@ -34,6 +34,7 @@ public class Main extends PApplet{
         
         params.populationSize = 100;
         params.evolutionMutationChance = 0.2f;
+        params.evolutionCrossoverChance = 0.4f;
         
         params.evolutionKeepBest = true;
         params.evolutionElitismCount = 5;

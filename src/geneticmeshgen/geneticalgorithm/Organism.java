@@ -19,7 +19,7 @@ public class Organism {
     }
     
     public Organism mutate() { throw new UnsupportedOperationException(); }
-    public Organism crossover(Organism mate) { throw new UnsupportedOperationException(); }
+    public Organism[] crossover(Organism mate) { throw new UnsupportedOperationException(); }
     public Organism clone() { throw new UnsupportedOperationException(); }
 
     public float getFitness() {

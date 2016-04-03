@@ -23,7 +23,8 @@ public class Parameters {
      */
     public boolean evolutionKeepBest;
     
-    public float evolutionMutationChance; 
+    public float evolutionMutationChance;
+    public float evolutionCrossoverChance;
     
     public int populationSize;
     

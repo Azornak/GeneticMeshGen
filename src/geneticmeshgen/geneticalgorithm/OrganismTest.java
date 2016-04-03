@@ -33,16 +33,32 @@ public class OrganismTest extends Organism {
     public Organism mutate() {
         OrganismTest newOrg = this.clone();
         
-        for(int i=0;i<newOrg.string.length();i++) {
-            if(parameters.random.nextFloat() < parameters.evolutionMutationChance) {
-                char c = newOrg.string.charAt(i);
-                c += parameters.random.nextBoolean() ? -1 : 1;
+        int pos = parameters.random.nextInt(newOrg.string.length());
+        
+        char c = newOrg.string.charAt(pos);
+        c += parameters.random.nextBoolean() ? -1 : 1;
                 
-                newOrg.string = newOrg.string.substring(0,i) + c + newOrg.string.substring(i+1);
-            }
-        }
+        newOrg.string = newOrg.string.substring(0,pos) + c + newOrg.string.substring(pos+1);
         
         return newOrg;
+    }
+    
+    public Organism[] crossover(Organism other) {
+        OrganismTest mate = (OrganismTest)other;
+
+        OrganismTest a = this.clone();
+        OrganismTest b = mate.clone();
+        
+        // 1 point crossover
+        int max = Math.min(a.string.length(),b.string.length());
+        int p = parameters.random.nextInt(max);
+        
+        
+        a.string = this.string.substring(0,p) + mate.string.substring(p);
+        b.string = mate.string.substring(0,p) + this.string.substring(p);
+        
+        
+        return new Organism[] { a, b };
     }
     
     public String getString() {

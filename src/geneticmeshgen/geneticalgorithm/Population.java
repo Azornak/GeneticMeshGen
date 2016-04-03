@@ -74,7 +74,22 @@ public class Population {
         // Populate the rest of the organisms with either mutated or mated ones
         while(this.organisms.size() < parameters.populationSize)
         {
-            this.organisms.add(elite.get(parameters.random.nextInt(elite.size())).mutate());
+            ArrayList<Organism> organismsToAdd = new ArrayList<>();
+            
+            if(parameters.random.nextFloat() < parameters.evolutionCrossoverChance) {
+                Organism[] children = elite.get(parameters.random.nextInt(elite.size())).crossover(elite.get(parameters.random.nextInt(elite.size())));
+                
+                for(int i=0;i<children.length;i++)
+                    organismsToAdd.add(children[i]);
+            }
+            
+            for(int i=0;i<organismsToAdd.size() && this.organisms.size() < parameters.populationSize;i++) {
+                if(parameters.random.nextFloat() < parameters.evolutionMutationChance) {
+                    this.organisms.add(organismsToAdd.get(i).mutate());
+                } else {
+                    this.organisms.add(organismsToAdd.get(i));
+                }
+            }
         }
         
         
