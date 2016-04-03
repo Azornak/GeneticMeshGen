@@ -5,12 +5,29 @@
  */
 package geneticmeshgen.geneticalgorithm;
 
+import java.util.Random;
+
 /**
  *
  * @author JPiolho
  */
 public class Parameters {
+    public Random random;
+    
+    /**
+     * How many of the top performing organisms to mutate and mate
+     */
+    public int evolutionElitismCount;
+    /**
+     * Always make sure the best one from the previous epoch moves on to the next without any changes
+     */
+    public boolean evolutionKeepBest;
+    
+    public float evolutionMutationChance; 
+    
     public int populationSize;
+    
+    
     
     public int organismTextureWidth,organismTextureHeight;
 }

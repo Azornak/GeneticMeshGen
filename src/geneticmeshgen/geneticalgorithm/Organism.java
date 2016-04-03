@@ -5,33 +5,33 @@
  */
 package geneticmeshgen.geneticalgorithm;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author JPiolho
  */
 public class Organism {
-    private ArrayList<Float> vertexes;
-    private ArrayList<Float> uvs;
-    private int[] texture;
+    private float fitness;
     
-    public Organism(Parameters params) {
-        this.vertexes = new ArrayList<>();
-        this.uvs = new ArrayList<>();
-        
-        this.texture = new int[params.organismTextureWidth * params.organismTextureHeight * 3];
+    protected Parameters parameters;
+    
+    protected Organism(Parameters parameters) {
+        this.parameters = parameters;
     }
     
-    public Float[] getVertexes() {
-        return vertexes.toArray(new Float[vertexes.size()]);
+    public Organism mutate() { throw new UnsupportedOperationException(); }
+    public Organism crossover(Organism mate) { throw new UnsupportedOperationException(); }
+    public Organism clone() { throw new UnsupportedOperationException(); }
+
+    public float getFitness() {
+        return fitness;
     }
     
-    public Float[] getUVs() {
-        return uvs.toArray(new Float[uvs.size()]);
+    void setFitness(float value) {
+        fitness = value;
     }
     
-    public int[] getTextureRGB() {
-        return texture.clone();
+    
+    void setParameters(Parameters params) {
+        parameters = params;
     }
 }

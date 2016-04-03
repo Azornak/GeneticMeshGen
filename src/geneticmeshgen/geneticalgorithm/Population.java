@@ -6,6 +6,7 @@
 package geneticmeshgen.geneticalgorithm;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  *
@@ -13,25 +14,80 @@ import java.util.ArrayList;
  */
 public class Population {
     private ArrayList<Organism> organisms;
-    private ArrayList<Float> fitness;
     
     private Parameters parameters;
     
     private int generation;
     
+    private Organism bestOrganismLastGeneration;
     
     
-    public Population(Parameters params) {
+    public Population(Parameters params,Organism template) {        
         this.parameters = params;
+        
+        template.setParameters(params);
         
         this.organisms = new ArrayList<>();
         for(int i=0;i<params.populationSize;i++) {
-            this.organisms.add(new Organism(params));
+            this.organisms.add(template.mutate());
         }
-    }
-    
-    
-    public void setFitness() {
         
+        this.generation = 0;
     }
+    
+    
+    public void epoch(EvaluationCallback evaluation) {
+
+        // Evaluate all the organisms
+        for(int i=0;i<organisms.size();i++) {
+            Organism org = organisms.get(i);
+            float fitness = evaluation.evaluateOrganism(org);
+            
+            org.setFitness(fitness);
+        }
+        
+        // Sort by fitness
+        organisms.sort(new Comparator<Organism>() {
+
+            @Override
+            public int compare(Organism t, Organism t1) {
+                return Math.round(t1.getFitness() - t.getFitness());
+            }
+        });
+        
+       
+        
+        // Get the elite ones
+        ArrayList<Organism> elite = new ArrayList<>();
+        
+        for(int i=0;i<parameters.evolutionElitismCount;i++) {
+            elite.add(organisms.get(i));
+        }
+        
+        bestOrganismLastGeneration = elite.get(0);
+        
+        this.organisms.clear();
+        
+        // Always add the best one if parameter is enabled
+        if(parameters.evolutionKeepBest) this.organisms.add(elite.get(0).clone());
+        
+        // Populate the rest of the organisms with either mutated or mated ones
+        while(this.organisms.size() < parameters.populationSize)
+        {
+            this.organisms.add(elite.get(parameters.random.nextInt(elite.size())).mutate());
+        }
+        
+        
+        generation++;
+    }
+    
+    
+    public Organism getBestOrganism() {
+        return bestOrganismLastGeneration;
+    }
+    
+    public int getGeneration() {
+        return generation;
+    }
+    
 }
