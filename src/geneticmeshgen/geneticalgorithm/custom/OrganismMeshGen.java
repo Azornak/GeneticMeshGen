@@ -10,6 +10,7 @@ import geneticmeshgen.geneticalgorithm.OrganismTest;
 import geneticmeshgen.geneticalgorithm.Parameters;
 import geneticmeshgen.utils.MathUtils;
 import java.util.ArrayList;
+import processing.core.*;
 
 /**
  *
@@ -175,6 +176,24 @@ public class OrganismMeshGen extends Organism {
         return newOrg;
     }
     
-    
+    public PShape getShape(Main m){
+        
+        PShape tmp = m.createShape();
+        
+        PImage tmpImg = m.createImage(parameters.organismTextureWidth, parameters.organismTextureHeight, m.ARGB);
+        tmpImg.loadPixels();
+        System.arraycopy(texture, 0, tmpImg.pixels, 0, tmpImg.pixels.length);
+        tmpImg.updatePixels();
+        
+        m.beginShape();
+        m.texture(tmpImg);
+        for(int i = 0; i < vertexes.size(); i += 3){
+            tmp.vertex(vertexes.get(i), vertexes.get(i+1), vertexes.get(i+2), uvs.get(i), uvs.get(i+1));
+        }
+        m.endShape(m.CLOSE);
+
+        return tmp;
+    }
+            
     
 }

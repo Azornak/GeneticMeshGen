@@ -1,3 +1,5 @@
+package geneticmeshgen.geneticalgorithm.custom;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -20,7 +22,8 @@ import java.util.Random;
 import processing.core.*;
 
 public class Main extends PApplet implements EvaluationCallback {
-    PShape p;
+    private PShape p;
+    public Main m; 
     
     Population pop;
     ParametersMeshGen params;
@@ -30,6 +33,8 @@ public class Main extends PApplet implements EvaluationCallback {
     @Override
     public void settings(){
         size(1000, 1000, P3D);
+        
+        m = this;
         
         params = new ParametersMeshGen();
         
@@ -72,8 +77,8 @@ public class Main extends PApplet implements EvaluationCallback {
         background(0);
         translate(width/2.0f, height/2.0f);
         shape(p);
-        /*
-        pop.epoch(new EvaluationCallback() {
+        
+        /*pop.epoch(new EvaluationCallback() {
 
             @Override
             public float evaluateOrganism(Organism organism) {
@@ -88,8 +93,8 @@ public class Main extends PApplet implements EvaluationCallback {
                 
                 return fitness;
             }
-        });
-        */
+        });*/
+        
 
     }
     
