@@ -73,18 +73,38 @@ public class OrganismMeshGen extends Organism {
         OrganismMeshGen newOrg = this.clone();
         
         for(int i=0;i<newOrg.vertexes.size();i++) {
-            int pos = i;
-            newOrg.vertexes.set(pos, newOrg.vertexes.get(pos) + ((parameters.random.nextFloat() * 2f - 1f) * parameters.organismVertexMutationRate));
+            if(parameters.random.nextFloat() < parameters.evolutionMutationChance) {
+                int pos = i;
+                newOrg.vertexes.set(pos, newOrg.vertexes.get(pos) + ((parameters.random.nextFloat() * 2f - 1f) * parameters.organismVertexMutationRate));
+            }
         }
         
         for(int i=0;i<newOrg.uvs.size();i++) {
-            int pos = i;
-            newOrg.uvs.set(pos, newOrg.uvs.get(pos) + ((parameters.random.nextFloat() * 2f - 1f) * parameters.organismUVMutationRate));
+            if(parameters.random.nextFloat() < parameters.evolutionMutationChance) {
+                int pos = i;
+                newOrg.uvs.set(pos, newOrg.uvs.get(pos) + ((parameters.random.nextFloat() * 2f - 1f) * parameters.organismUVMutationRate));
+            }
         }
         
         for(int i=0;i<newOrg.texture.length;i++) {
-            int pos = i;
-            newOrg.texture[pos] = MathUtils.clamp(newOrg.texture[pos] + (parameters.random.nextInt(parameters.organismColorMutationRate*2) - parameters.organismColorMutationRate),Integer.MIN_VALUE,Integer.MAX_VALUE);
+            
+            if(parameters.random.nextFloat() < parameters.evolutionMutationChance) {
+                int pos = i;
+
+                int argb = newOrg.texture[pos];
+                int alpha = 0xFF & (argb >> 24);
+                int red = 0xFF & ( argb >> 16);
+                int green = 0xFF & (argb >> 8 );
+                int blue = 0xFF & (argb >> 0 );
+                
+                switch(parameters.random.nextInt(3)) {
+                    case 0: red = MathUtils.clamp(red + (parameters.random.nextInt(parameters.organismColorMutationRate*2) - parameters.organismColorMutationRate),0,255); break;
+                    case 1: green = MathUtils.clamp(green + (parameters.random.nextInt(parameters.organismColorMutationRate*2) - parameters.organismColorMutationRate),0,255); break;
+                    case 2: blue = MathUtils.clamp(blue + (parameters.random.nextInt(parameters.organismColorMutationRate*2) - parameters.organismColorMutationRate),0,255); break;
+                }
+
+                newOrg.texture[pos] = (alpha << 24) | (red << 16 ) | (green<<8) | blue;
+            }
         }
         
         return newOrg;
