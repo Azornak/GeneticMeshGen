@@ -120,7 +120,6 @@ public class Main extends PApplet implements EvaluationCallback {
             translate(width/2.0f, height/2.0f, 0);
             shape(p);
             
-            pop.finishValidationOrganism(compareScreenToSprite(0));
         }
         
         
