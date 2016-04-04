@@ -50,7 +50,7 @@ public class OrganismMeshGen extends Organism {
         }
         
         for(int i=0;i<org.texture.length;i++) {
-            org.texture[i] = 0xFFFF0000;
+            org.texture[i] = 0xFF000000;
         }
         
         return org;
@@ -72,20 +72,19 @@ public class OrganismMeshGen extends Organism {
     public Organism mutate() {
         OrganismMeshGen newOrg = this.clone();
         
-
-        switch(parameters.random.nextInt(3)) {
-            case 0: // Vertex
-                int pos = parameters.random.nextInt(newOrg.vertexes.size());
-                newOrg.vertexes.set(pos, newOrg.vertexes.get(pos) + ((parameters.random.nextFloat() * 2f - 1f) * parameters.organismVertexMutationRate));
-                break;
-            case 1: // UVs
-                pos = parameters.random.nextInt(newOrg.uvs.size());
-                newOrg.uvs.set(pos, newOrg.uvs.get(pos) + ((parameters.random.nextFloat() * 2f - 1f) * parameters.organismUVMutationRate));
-                break;
-            case 2: // Texture
-                pos = parameters.random.nextInt(newOrg.texture.length);
-                newOrg.texture[pos] = MathUtils.clamp(newOrg.texture[pos] + (parameters.random.nextInt(parameters.organismColorMutationRate*2) - parameters.organismColorMutationRate),0,Integer.MAX_VALUE);
-                break;
+        for(int i=0;i<newOrg.vertexes.size();i++) {
+            int pos = i;
+            newOrg.vertexes.set(pos, newOrg.vertexes.get(pos) + ((parameters.random.nextFloat() * 2f - 1f) * parameters.organismVertexMutationRate));
+        }
+        
+        for(int i=0;i<newOrg.uvs.size();i++) {
+            int pos = i;
+            newOrg.uvs.set(pos, newOrg.uvs.get(pos) + ((parameters.random.nextFloat() * 2f - 1f) * parameters.organismUVMutationRate));
+        }
+        
+        for(int i=0;i<newOrg.texture.length;i++) {
+            int pos = i;
+            newOrg.texture[pos] = MathUtils.clamp(newOrg.texture[pos] + (parameters.random.nextInt(parameters.organismColorMutationRate*2) - parameters.organismColorMutationRate),Integer.MIN_VALUE,Integer.MAX_VALUE);
         }
         
         return newOrg;

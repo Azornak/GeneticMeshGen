@@ -83,11 +83,7 @@ public class Population {
             }
             
             for(int i=0;i<organismsToAdd.size() && this.organisms.size() < parameters.populationSize;i++) {
-                if(parameters.random.nextFloat() < parameters.evolutionMutationChance) {
-                    this.organisms.add(organismsToAdd.get(i).mutate());
-                } else {
-                    this.organisms.add(organismsToAdd.get(i));
-                }
+                this.organisms.add(organismsToAdd.get(i).mutate());
             }
         }
         

@@ -62,11 +62,11 @@ public class Main extends PApplet implements EvaluationCallback {
         params.evolutionKeepBest = true;
         params.evolutionElitismCount = 5;
         
-        params.organismColorMutationRate = 100;
+        params.organismColorMutationRate = 1000;
         params.organismTextureWidth = 128;
         params.organismTextureHeight = 128;
-        params.organismUVMutationRate = 0.1f;
-        params.organismVertexMutationRate = 0.5f;
+        params.organismUVMutationRate = 0.05f;
+        params.organismVertexMutationRate = 0.1f;
         
         params.organismNumVertexes = 100;
         
@@ -79,8 +79,8 @@ public class Main extends PApplet implements EvaluationCallback {
     
     @Override
     public void setup(){
-                frameRate(1000);
-                textureMode(NORMAL);
+        frameRate(1000);
+        textureMode(NORMAL);
     }
     
     @Override
