@@ -50,7 +50,7 @@ public class OrganismMeshGen extends Organism {
         }
         
         for(int i=0;i<org.texture.length;i++) {
-            org.texture[i] = 0;
+            org.texture[i] = 0xFFFF0000;
         }
         
         return org;
@@ -191,14 +191,13 @@ public class OrganismMeshGen extends Organism {
         System.arraycopy(texture, 0, tmpImg.pixels, 0, tmpImg.pixels.length);
         tmpImg.updatePixels();
         
-        tmp.beginShape();
-        m.noStroke();
-        m.texture(tmpImg);
+        tmp.beginShape(m.TRIANGLES);
         for(int i = 0, n = 0; i < vertexes.size(); i += 3, n += 2){
             tmp.vertex(vertexes.get(i), vertexes.get(i+1), vertexes.get(i+2), uvs.get(n), uvs.get(n + 1));
         }
         tmp.endShape(m.CLOSE);
-
+        tmp.setTexture(tmpImg);
+        
         return tmp;
     }
             

@@ -24,7 +24,7 @@ import processing.core.*;
 public class Main extends PApplet implements EvaluationCallback {
     private PShape p;
     public Main m; 
-    PImage[] sprites;
+    public PImage[] sprites;
     int[][] spritePixels;
     private final String spriteName = "Admiral_large";
     
@@ -36,7 +36,6 @@ public class Main extends PApplet implements EvaluationCallback {
     
     @Override
     public void settings(){
-        
         sprites = new PImage[4];
         
         sprites[0] = loadImage("sprites/" + spriteName + "_nw.bmp");
@@ -57,7 +56,7 @@ public class Main extends PApplet implements EvaluationCallback {
         
         params = new ParametersMeshGen();
         
-        params.populationSize = 10;
+        params.populationSize = 150;
         params.evolutionMutationChance = 0.2f;
         params.evolutionCrossoverChance = 0.4f;
         params.evolutionKeepBest = true;
@@ -66,8 +65,8 @@ public class Main extends PApplet implements EvaluationCallback {
         params.organismColorMutationRate = 100;
         params.organismTextureWidth = 128;
         params.organismTextureHeight = 128;
-        params.organismUVMutationRate = 0.01f;
-        params.organismVertexMutationRate = 0.05f;
+        params.organismUVMutationRate = 0.1f;
+        params.organismVertexMutationRate = 0.5f;
         
         params.organismNumVertexes = 100;
         
@@ -80,7 +79,8 @@ public class Main extends PApplet implements EvaluationCallback {
     
     @Override
     public void setup(){
-        
+                frameRate(1000);
+                textureMode(NORMAL);
     }
     
     @Override
@@ -88,13 +88,12 @@ public class Main extends PApplet implements EvaluationCallback {
         test = (OrganismMeshGen) pop.getNextValidationOrganism();
         p = test.getShape(this);
         background(255, 255, 0);
-        lights();
+        noStroke();
        // camera(70.0f, 65.0f, 70.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f);
-        ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.001f, 1000);
+        ortho(-5.0f, 5.0f, -5.0f, 5.0f, 0.001f, 1000);
         
         translate(width/2.0f, height/2.0f, 0);
         shape(p);
-     
         pop.finishValidationOrganism(compareScreenToSprite(0));
         
         /*pop.epoch(new EvaluationCallback() {
