@@ -73,6 +73,10 @@ public class Main extends PApplet implements EvaluationCallback {
         
         params.organismNumVertexes = 100;
         
+        params.mutateTexture = true;
+        params.mutateUVs = true;
+        params.mutateVertexes = true;
+        
         params.random = new Random();
         
         pop = new Population(params,OrganismMeshGen.template(params));
@@ -168,5 +172,21 @@ public class Main extends PApplet implements EvaluationCallback {
     public void finishedEvaluation(int generation, Organism best) {
         System.out.println("#" + generation + " | Fitness: " + best.getFitness());
         newEpoch = true;
+    }
+    
+    
+    
+    @Override
+    public void keyReleased(){
+        if(key == 'u' || key == 'U'){
+            params.mutateUVs = !params.mutateUVs;
+        }
+        else if(key == 'v' || key == 'V'){
+            params.mutateVertexes = !params.mutateVertexes;
+        }
+        else if(key == 't' || key == 'T'){
+            params.mutateTexture = !params.mutateTexture;
+        }
+        
     }
 }

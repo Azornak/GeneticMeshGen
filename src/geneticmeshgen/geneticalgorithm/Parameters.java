@@ -28,4 +28,6 @@ public class Parameters {
     
     public int populationSize;
     
+    public boolean mutateVertexes, mutateUVs, mutateTexture;
+    
 }
