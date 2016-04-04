@@ -109,6 +109,7 @@ public class Population {
         
         if(curOrganism >= this.organisms.size()) {
             finishEpoch();
+            curOrganism = 0;
         }
     }
     

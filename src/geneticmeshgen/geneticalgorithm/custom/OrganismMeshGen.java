@@ -41,9 +41,9 @@ public class OrganismMeshGen extends Organism {
         OrganismMeshGen org = new OrganismMeshGen(parameters);
         
         for(int i=0;i<parameters.organismNumVertexes;i++) {
-            org.vertexes.add(0.0f);
-            org.vertexes.add(0.0f);
-            org.vertexes.add(0.0f);
+            org.vertexes.add(parameters.random.nextFloat() * 2 - 1);
+            org.vertexes.add(parameters.random.nextFloat() * 2 - 1);
+            org.vertexes.add(parameters.random.nextFloat() * 2 - 1);
             
             org.uvs.add(0.0f);
             org.uvs.add(0.0f);
@@ -104,6 +104,10 @@ public class OrganismMeshGen extends Organism {
         int max = Math.min(a.vertexes.size(),b.vertexes.size());
         int p = parameters.random.nextInt(max);
         
+        a.vertexes.clear();
+        b.vertexes.clear();
+
+        
         for(int i=0;i<p;i++) {
             a.vertexes.add(this.vertexes.get(i));
         }
@@ -121,6 +125,9 @@ public class OrganismMeshGen extends Organism {
         // UVs
         max = Math.min(a.uvs.size(),b.uvs.size());
         p = parameters.random.nextInt(max);
+        
+        a.uvs.clear();
+        b.uvs.clear();
         
         for(int i=0;i<p;i++) {
             a.uvs.add(this.uvs.get(i));
@@ -154,7 +161,6 @@ public class OrganismMeshGen extends Organism {
             b.texture[i] = this.texture[i];
         }
        
-        
         return new Organism[] { a, b };
     }
 
@@ -177,8 +183,6 @@ public class OrganismMeshGen extends Organism {
     }
     
     public PShape getShape(Main m){
-        System.out.println("Vertexes: " + vertexes.size());
-        System.out.println("UVs: " + uvs.size());
         
         PShape tmp = m.createShape();
         
@@ -188,11 +192,10 @@ public class OrganismMeshGen extends Organism {
         tmpImg.updatePixels();
         
         tmp.beginShape();
+        m.noStroke();
         m.texture(tmpImg);
-        int UVCount = 0;
-        for(int i = 0; i < vertexes.size(); i += 3){
-            tmp.vertex(vertexes.get(i), vertexes.get(i+1), vertexes.get(i+2), uvs.get(UVCount), uvs.get(UVCount + 1));
-            UVCount += 2;
+        for(int i = 0, n = 0; i < vertexes.size(); i += 3, n += 2){
+            tmp.vertex(vertexes.get(i), vertexes.get(i+1), vertexes.get(i+2), uvs.get(n), uvs.get(n + 1));
         }
         tmp.endShape(m.CLOSE);
 

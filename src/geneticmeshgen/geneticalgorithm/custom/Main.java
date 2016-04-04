@@ -24,6 +24,9 @@ import processing.core.*;
 public class Main extends PApplet implements EvaluationCallback {
     private PShape p;
     public Main m; 
+    PImage[] sprites;
+    int[][] spritePixels;
+    private final String spriteName = "Admiral_large";
     
     Population pop;
     ParametersMeshGen params;
@@ -33,13 +36,28 @@ public class Main extends PApplet implements EvaluationCallback {
     
     @Override
     public void settings(){
-        size(1000, 1000, P3D);
+        
+        sprites = new PImage[4];
+        
+        sprites[0] = loadImage("sprites/" + spriteName + "_nw.bmp");
+        sprites[1] = loadImage("sprites/" + spriteName + "_ne.bmp");
+        sprites[2] = loadImage("sprites/" + spriteName + "_sw.bmp");
+        sprites[3] = loadImage("sprites/" + spriteName + "_se.bmp");
+        spritePixels = new int[4][sprites[0].height * sprites[0].width];
+       
+        for(int i = 0; i < 4; i++){
+            sprites[i].loadPixels();
+            System.arraycopy(sprites[i].pixels, 0, spritePixels[i], 0, spritePixels[i].length);
+        }
+        
+        
+        size(sprites[0].width, sprites[0].height, P3D);
         
         m = this;
         
         params = new ParametersMeshGen();
         
-        params.populationSize = 100;
+        params.populationSize = 10;
         params.evolutionMutationChance = 0.2f;
         params.evolutionCrossoverChance = 0.4f;
         params.evolutionKeepBest = true;
@@ -62,18 +80,22 @@ public class Main extends PApplet implements EvaluationCallback {
     
     @Override
     public void setup(){
-        test = OrganismMeshGen.template(params);
-        for(int i = 0; i < 10; i++){
-           test.mutate();
-        }
-        p = test.getShape(this);
-}
+        
+    }
     
     @Override
     public void draw(){
-        background(0);
-        translate(width/2.0f, height/2.0f);
+        test = (OrganismMeshGen) pop.getNextValidationOrganism();
+        p = test.getShape(this);
+        background(255, 255, 0);
+        lights();
+       // camera(70.0f, 65.0f, 70.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f);
+        ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.001f, 1000);
+        
+        translate(width/2.0f, height/2.0f, 0);
         shape(p);
+     
+        pop.finishValidationOrganism(compareScreenToSprite(0));
         
         /*pop.epoch(new EvaluationCallback() {
 
@@ -93,6 +115,22 @@ public class Main extends PApplet implements EvaluationCallback {
         });*/
         
 
+    }
+    
+    
+    
+    public float compareScreenToSprite(int sprite){
+        float fitness = 0;
+        loadPixels();
+        for(int i = 0; i < spritePixels[sprite].length; i++){
+            int x = spritePixels[sprite][i];
+            int y = pixels[i];
+            fitness -= Math.abs((x & 0xFF) - (y & 0xFF))
+                + Math.abs(((x & 0xFF00) >> 8) - ((y & 0xFF00) >> 8))
+                + Math.abs(((x & 0xFF0000) >> 16) - ((y & 0xFF0000) >> 16));
+        }
+        
+        return fitness;
     }
     
     
