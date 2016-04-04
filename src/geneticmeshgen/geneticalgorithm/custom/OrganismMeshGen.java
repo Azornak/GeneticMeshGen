@@ -177,6 +177,8 @@ public class OrganismMeshGen extends Organism {
     }
     
     public PShape getShape(Main m){
+        System.out.println("Vertexes: " + vertexes.size());
+        System.out.println("UVs: " + uvs.size());
         
         PShape tmp = m.createShape();
         
@@ -185,12 +187,14 @@ public class OrganismMeshGen extends Organism {
         System.arraycopy(texture, 0, tmpImg.pixels, 0, tmpImg.pixels.length);
         tmpImg.updatePixels();
         
-        m.beginShape();
+        tmp.beginShape();
         m.texture(tmpImg);
+        int UVCount = 0;
         for(int i = 0; i < vertexes.size(); i += 3){
-            tmp.vertex(vertexes.get(i), vertexes.get(i+1), vertexes.get(i+2), uvs.get(i), uvs.get(i+1));
+            tmp.vertex(vertexes.get(i), vertexes.get(i+1), vertexes.get(i+2), uvs.get(UVCount), uvs.get(UVCount + 1));
+            UVCount += 2;
         }
-        m.endShape(m.CLOSE);
+        tmp.endShape(m.CLOSE);
 
         return tmp;
     }

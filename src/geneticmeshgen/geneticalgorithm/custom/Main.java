@@ -27,6 +27,7 @@ public class Main extends PApplet implements EvaluationCallback {
     
     Population pop;
     ParametersMeshGen params;
+    OrganismMeshGen test;
     
     String testString = "Hello World!";
     
@@ -56,20 +57,16 @@ public class Main extends PApplet implements EvaluationCallback {
         
         pop = new Population(params,OrganismMeshGen.template(params));
         pop.setCallback(this);
+        
     }
     
     @Override
     public void setup(){
-        p = createShape();
-        p.beginShape();
-        p.fill(0, 0, 255);
-        p.noStroke();
-        p.vertex(0, 0);
-        p.vertex(0, 50);
-        p.vertex(50, 50);
-        p.vertex(50, 0);
-        p.vertex(80,-40);
-        p.endShape(CLOSE);
+        test = OrganismMeshGen.template(params);
+        for(int i = 0; i < 10; i++){
+           test.mutate();
+        }
+        p = test.getShape(this);
 }
     
     @Override
@@ -100,7 +97,7 @@ public class Main extends PApplet implements EvaluationCallback {
     
     
     public static void main(String args[]) {
-        PApplet.main(new String[] { "--present", "Main" });
+        PApplet.main(new String[] { "--present", "geneticmeshgen.geneticalgorithm.custom.Main" });
     }
 
     @Override
