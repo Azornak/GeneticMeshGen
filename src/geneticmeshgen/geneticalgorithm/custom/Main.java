@@ -36,13 +36,14 @@ public class Main extends PApplet implements EvaluationCallback {
     
     
     private boolean newEpoch = false;
-    
+    float previewRot;
+    int previewSprite;
     @Override
     public void settings(){
         sprites = new PImage[4];
         
-        sprites[0] = loadImage("sprites/" + spriteName + "_nw.bmp");
-        sprites[1] = loadImage("sprites/" + spriteName + "_ne.bmp");
+        sprites[0] = loadImage("sprites/" + spriteName + "_ne.bmp");
+        sprites[1] = loadImage("sprites/" + spriteName + "_nw.bmp");
         sprites[2] = loadImage("sprites/" + spriteName + "_sw.bmp");
         sprites[3] = loadImage("sprites/" + spriteName + "_se.bmp");
         spritePixels = new int[4][sprites[0].height * sprites[0].width];
@@ -61,15 +62,15 @@ public class Main extends PApplet implements EvaluationCallback {
         
         params.populationSize = 150;
         params.evolutionMutationChance = 0.2f;
-        params.evolutionCrossoverChance = 0.4f;
+        params.evolutionCrossoverChance = 0.3f;
         params.evolutionKeepBest = true;
         params.evolutionElitismCount = 5;
         
         params.organismColorMutationRate = 10;
         params.organismTextureWidth = 128;
         params.organismTextureHeight = 128;
-        params.organismUVMutationRate = 0.2f;
-        params.organismVertexMutationRate = 0.1f;
+        params.organismUVMutationRate = 1.0f;
+        params.organismVertexMutationRate = 10.0f;
         
         params.organismNumVertexes = 100;
         
@@ -82,6 +83,9 @@ public class Main extends PApplet implements EvaluationCallback {
         pop = new Population(params,OrganismMeshGen.template(params));
         pop.setCallback(this);
         
+        
+        previewRot = 0.0f;
+        previewSprite = 0;
     }
     
     @Override
@@ -93,58 +97,57 @@ public class Main extends PApplet implements EvaluationCallback {
     
     @Override
     public void draw(){
+        clear();
         newEpoch = false;
-        
         do {
-            test = (OrganismMeshGen) pop.getNextValidationOrganism();
-            p = test.getShape(this);
+            float rot = 0, fitness = 0;
+            for(int i = 0; i < 4; i++){
+                test = (OrganismMeshGen) pop.getNextValidationOrganism();
+                p = test.getShape(this);
 
-            pushMatrix();
-            background(255, 255, 0);
-
-           // camera(70.0f, 65.0f, 70.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f);
-            ortho(-5.0f, 5.0f, -5.0f, 5.0f, 0.001f, 1000);
-
-            translate(width/2.0f, height/2.0f, 0);
-            shape(p);
-            
-            pop.finishValidationOrganism(compareScreenToSprite(0));
-            
-            popMatrix();
+                pushMatrix();
+                
+                background(255, 255, 0);
+                ortho();
+                
+                translate(width/2.0f, height/2.0f, 0);
+                rotateX(-atan(0.5f));
+                rotateY(rot);
+                shape(p);
+                
+                popMatrix();
+                
+                fitness += compareScreenToSprite(i);
+                rot += PI/2;
+            }
+            pop.finishValidationOrganism(fitness);
         }
         while(!newEpoch);
         
         // Render best organism
         {
             test = (OrganismMeshGen)pop.getBestOrganism();
-            background(255, 255, 0);
+            background(sprites[previewSprite]);
 
-            ortho(-5.0f, 5.0f, -5.0f, 5.0f, 0.001f, 1000);
 
+            pushMatrix();
+            ortho();
             translate(width/2.0f, height/2.0f, 0);
+            rotateX(-atan(0.5f));
+            rotateY(previewRot);
             shape(p);
+            popMatrix();
             
         }
+        if(previewSprite < 3){
+         previewRot += PI/2; 
+         previewSprite++;
+        }
+        else{
+            previewRot = 0;
+            previewSprite = 0;
+        }
         
-        
-        /*pop.epoch(new EvaluationCallback() {
-
-            @Override
-            public float evaluateOrganism(Organism organism) {
-                OrganismTest test = (OrganismTest)organism;
-                
-                String str = test.getString();
-                
-                float fitness = 0.0f;
-                for(int i=0;i<str.length();i++) {
-                    fitness -= Math.abs(testString.charAt(i) - str.charAt(i));
-                }
-                
-                return fitness;
-            }
-        });*/
-        
-
     }
     
     
@@ -172,6 +175,15 @@ public class Main extends PApplet implements EvaluationCallback {
     public void finishedEvaluation(int generation, Organism best) {
         System.out.println("#" + generation + " | Fitness: " + best.getFitness());
         newEpoch = true;
+    }
+    
+    private void drawDebugText(){
+        textSize(32);
+        fill(255, 0, 0);
+        text("Vert.Mut : " + (params.mutateVertexes ? "ON" : "OFF"), width/2.0f, height/2.0f, 0);
+        text("UV.Mut : " + (params.mutateUVs ? "ON" : "OFF"), 15, 5, 0);
+        text("Text.Mut : " + (params.mutateVertexes ? "ON" : "OFF"), 25, 5, 0);
+        
     }
     
     
