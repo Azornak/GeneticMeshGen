@@ -7,7 +7,7 @@ package geneticmeshgen.geneticalgorithm;
 
 /**
  *
- * @author JPiolho
+ * @author Vegard
  */
 public class OrganismTest extends Organism {
     

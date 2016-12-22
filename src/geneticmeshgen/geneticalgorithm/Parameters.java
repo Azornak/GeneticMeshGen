@@ -9,7 +9,7 @@ import java.util.Random;
 
 /**
  *
- * @author JPiolho
+ * @author Vegard
  */
 public class Parameters {
     public Random random;

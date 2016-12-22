@@ -10,7 +10,7 @@ import java.util.Comparator;
 
 /**
  *
- * @author JPiolho
+ * @author Vegard
  */
 public class Population {
     private ArrayList<Organism> organisms;
@@ -64,19 +64,19 @@ public class Population {
         }
         
         bestOrganismLastGeneration = elite.get(0);
-        
+        ArrayList<Organism> oldOrgs = (ArrayList<Organism>)organisms.clone();
         this.organisms.clear();
         
         // Always add the best one if parameter is enabled
-        if(parameters.evolutionKeepBest) this.organisms.add(elite.get(0).clone());
-        
+        if(parameters.evolutionKeepBest) this.organisms.addAll(elite);//this.organisms.add(elite.get(0).clone());
+       
         // Populate the rest of the organisms with either mutated or mated ones
         while(this.organisms.size() < parameters.populationSize)
         {
             ArrayList<Organism> organismsToAdd = new ArrayList<>();
             
             if(parameters.random.nextFloat() < parameters.evolutionCrossoverChance) {
-                Organism[] children = elite.get(parameters.random.nextInt(elite.size())).crossover(elite.get(parameters.random.nextInt(elite.size())));
+                Organism[] children = rankSelection(oldOrgs).crossover(rankSelection(oldOrgs));//elite.get(parameters.random.nextInt(elite.size())).crossover(elite.get(parameters.random.nextInt(elite.size())));
                 
                 for(int i=0;i<children.length;i++)
                     organismsToAdd.add(children[i]);
@@ -118,5 +118,28 @@ public class Population {
     public int getGeneration() {
         return generation;
     }
+    
+    public Organism rankSelection(ArrayList<Organism> orgs){
+        for(int i = 0; i < orgs.size(); i++){
+            orgs.get(i).setWeight(1f / (float)i + 1f);
+        }
+        
+        return chooseOnWeight(orgs);
+    }
+
+    public Organism chooseOnWeight(ArrayList<Organism> items) {
+        double completeWeight = 0.0;
+        for (Organism item : items)
+            completeWeight += item.getWeight();
+        double r = Math.random() * completeWeight;
+        double countWeight = 0.0;
+        for (Organism item : items) {
+            countWeight += item.getWeight();
+            if (countWeight >= r)
+                return item;
+        }
+        throw new RuntimeException("Should never be shown.");
+    }
+
     
 }

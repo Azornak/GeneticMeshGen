@@ -14,7 +14,7 @@ import processing.core.*;
 
 /**
  *
- * @author JPiolho
+ * @author Vegard
  */
 public class OrganismMeshGen extends Organism {
     private ArrayList<Float> vertexes;
@@ -101,7 +101,7 @@ public class OrganismMeshGen extends Organism {
                     int alpha = 0xFF & (argb >> 24);
                     int red = 0xFF & ( argb >> 16);
                     int green = 0xFF & (argb >> 8 );
-                    int blue = 0xFF & (argb >> 0 );
+                    int blue = 0xFF & (argb);
 
                     switch(parameters.random.nextInt(3)) {
                         case 0: red = MathUtils.clamp(red + (parameters.random.nextInt(parameters.organismColorMutationRate*2) - parameters.organismColorMutationRate),0,255); break;

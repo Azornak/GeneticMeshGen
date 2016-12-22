@@ -13,11 +13,7 @@ package geneticmeshgen.geneticalgorithm.custom;
 
 import geneticmeshgen.geneticalgorithm.EvaluationCallback;
 import geneticmeshgen.geneticalgorithm.Organism;
-import geneticmeshgen.geneticalgorithm.custom.OrganismMeshGen;
-import geneticmeshgen.geneticalgorithm.OrganismTest;
-import geneticmeshgen.geneticalgorithm.Parameters;
 import geneticmeshgen.geneticalgorithm.Population;
-import geneticmeshgen.geneticalgorithm.custom.ParametersMeshGen;
 import java.util.Random;
 import processing.core.*;
 
@@ -32,7 +28,7 @@ public class Main extends PApplet implements EvaluationCallback {
     ParametersMeshGen params;
     OrganismMeshGen test;
     
-    String testString = "Hello World!";
+    ControlWindow control;
     
     
     private boolean newEpoch = false;
@@ -62,7 +58,7 @@ public class Main extends PApplet implements EvaluationCallback {
         
         params.populationSize = 150;
         params.evolutionMutationChance = 0.2f;
-        params.evolutionCrossoverChance = 0.3f;
+        params.evolutionCrossoverChance = 0.6f;
         params.evolutionKeepBest = true;
         params.evolutionElitismCount = 5;
         
@@ -70,9 +66,9 @@ public class Main extends PApplet implements EvaluationCallback {
         params.organismTextureWidth = 128;
         params.organismTextureHeight = 128;
         params.organismUVMutationRate = 1.0f;
-        params.organismVertexMutationRate = 10.0f;
+        params.organismVertexMutationRate = 5.0f;
         
-        params.organismNumVertexes = 100;
+        params.organismNumVertexes = 50;
         
         params.mutateTexture = true;
         params.mutateUVs = true;
@@ -86,13 +82,18 @@ public class Main extends PApplet implements EvaluationCallback {
         
         previewRot = 0.0f;
         previewSprite = 0;
+        
     }
+    
     
     @Override
     public void setup(){
         frameRate(1000);
         textureMode(NORMAL);
         noStroke();
+        //String[] args = {"Control Window"};
+        // control = new ControlWindow(this);
+         //PApplet.runSketch(args, control);
     }
     
     @Override
@@ -127,8 +128,8 @@ public class Main extends PApplet implements EvaluationCallback {
         // Render best organism
         {
             test = (OrganismMeshGen)pop.getBestOrganism();
+            //image(sprites[previewSprite], 0, 0);
             background(sprites[previewSprite]);
-
 
             pushMatrix();
             ortho();
@@ -168,7 +169,7 @@ public class Main extends PApplet implements EvaluationCallback {
     
     
     public static void main(String args[]) {
-        PApplet.main(new String[] { "--present", "geneticmeshgen.geneticalgorithm.custom.Main" });
+        PApplet.main(new String[] {"--present", "geneticmeshgen.geneticalgorithm.custom.Main" });
     }
 
     @Override

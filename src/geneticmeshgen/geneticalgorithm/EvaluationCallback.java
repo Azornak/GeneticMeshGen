@@ -7,7 +7,7 @@ package geneticmeshgen.geneticalgorithm;
 
 /**
  *
- * @author JPiolho
+ * @author Vegard
  */
 public interface EvaluationCallback {
     void finishedEvaluation(int generation,Organism best);

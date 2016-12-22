@@ -7,12 +7,14 @@ package geneticmeshgen.geneticalgorithm;
 
 /**
  *
- * @author JPiolho
+ * @author Vegard
  */
 public class Organism {
     private float fitness;
     
     protected Parameters parameters;
+    
+    private float weight;
     
     protected Organism(Parameters parameters) {
         this.parameters = parameters;
@@ -34,4 +36,14 @@ public class Organism {
     void setParameters(Parameters params) {
         parameters = params;
     }
+
+    public float getWeight() {
+        return weight;
+    }
+
+    public void setWeight(float weight) {
+        this.weight = weight;
+    }
+    
+    
 }

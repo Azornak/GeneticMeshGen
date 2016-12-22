@@ -9,7 +9,7 @@ import geneticmeshgen.geneticalgorithm.Parameters;
 
 /**
  *
- * @author JPiolho
+ * @author Vegard
  */
 public class ParametersMeshGen extends Parameters {
     public int organismTextureWidth,organismTextureHeight;
