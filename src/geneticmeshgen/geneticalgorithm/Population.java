@@ -6,6 +6,7 @@
 package geneticmeshgen.geneticalgorithm;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 
 /**
@@ -44,6 +45,10 @@ public class Population {
     }
     
     
+    /**
+     * Finish the epoch.
+     * Create new population using crossover, mutation and elitism.
+     */
     private void finishEpoch() {
         // Sort by fitness
         organisms.sort(new Comparator<Organism>() {
@@ -54,8 +59,6 @@ public class Population {
             }
         });
         
-       
-        
         // Get the elite ones
         ArrayList<Organism> elite = new ArrayList<>();
         
@@ -63,28 +66,33 @@ public class Population {
             elite.add(organisms.get(i));
         }
         
+        
         bestOrganismLastGeneration = elite.get(0);
+        
+        //Save the old population temporarily
         ArrayList<Organism> oldOrgs = (ArrayList<Organism>)organisms.clone();
         this.organisms.clear();
         
         // Always add the best one if parameter is enabled
-        if(parameters.evolutionKeepBest) this.organisms.addAll(elite);//this.organisms.add(elite.get(0).clone());
+        if(parameters.evolutionKeepBest) this.organisms.addAll(elite);
        
         // Populate the rest of the organisms with either mutated or mated ones
         while(this.organisms.size() < parameters.populationSize)
         {
             ArrayList<Organism> organismsToAdd = new ArrayList<>();
             
+            //Do crossover
             if(parameters.random.nextFloat() < parameters.evolutionCrossoverChance) {
-                Organism[] children = rankSelection(oldOrgs).crossover(rankSelection(oldOrgs));//elite.get(parameters.random.nextInt(elite.size())).crossover(elite.get(parameters.random.nextInt(elite.size())));
+                Organism[] children = rankSelection(oldOrgs).crossover(rankSelection(oldOrgs));
                 
-                for(int i=0;i<children.length;i++)
-                    organismsToAdd.add(children[i]);
+                organismsToAdd.addAll(Arrays.asList(children));
             }
-            
-            for(int i=0;i<organismsToAdd.size() && this.organisms.size() < parameters.populationSize;i++) {
-                this.organisms.add(organismsToAdd.get(i).mutate());
+            //Add mutated organism
+            if(parameters.random.nextFloat() < parameters.evolutionMutationChance && this.organisms.size() + organismsToAdd.size() < parameters.populationSize) {
+                organismsToAdd.add(rankSelection(oldOrgs).mutate());
             }
+            this.organisms.addAll(organismsToAdd);
+            organismsToAdd.clear();
         }
         
         if(this.callback != null) {
@@ -94,11 +102,18 @@ public class Population {
         generation++;
     }
     
-    
+    /**
+     * Gets the next organism that should be validated/have it's fitness calculated
+     * @return 
+     */
     public Organism getNextValidationOrganism() {
         return this.organisms.get(curOrganism);
     }
     
+    /**
+     * Called when organism has been successfully validated
+     * @param fitness 
+     */
     public void finishValidationOrganism(float fitness) {
         this.organisms.get(curOrganism).setFitness(fitness);
         curOrganism++;
@@ -110,7 +125,10 @@ public class Population {
     }
     
     
-    
+    /**
+     * Gets the best organism from the previous generation
+     * @return The best organism
+     */
     public Organism getBestOrganism() {
         return bestOrganismLastGeneration;
     }
@@ -127,6 +145,11 @@ public class Population {
         return chooseOnWeight(orgs);
     }
 
+    /**
+     * Choose a "random" with weight according to rank
+     * @param items
+     * @return The selected organism
+     */
     public Organism chooseOnWeight(ArrayList<Organism> items) {
         double completeWeight = 0.0;
         for (Organism item : items)
@@ -138,7 +161,7 @@ public class Population {
             if (countWeight >= r)
                 return item;
         }
-        throw new RuntimeException("Should never be shown.");
+        throw new RuntimeException("Something went really wrong");
     }
 
     

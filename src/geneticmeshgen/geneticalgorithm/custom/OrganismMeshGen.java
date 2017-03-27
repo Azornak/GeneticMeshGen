@@ -1,27 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package geneticmeshgen.geneticalgorithm.custom;
 
 import geneticmeshgen.geneticalgorithm.Organism;
-import geneticmeshgen.geneticalgorithm.OrganismTest;
 import geneticmeshgen.geneticalgorithm.Parameters;
 import geneticmeshgen.utils.MathUtils;
 import java.util.ArrayList;
 import processing.core.*;
 
 /**
- *
+ * Represents an organism, which in this case is a model and texture.
  * @author Vegard
  */
 public class OrganismMeshGen extends Organism {
     private ArrayList<Float> vertexes;
     private ArrayList<Float> uvs;
     private int[] texture;
-    
-    private float fitness;
     
     protected ParametersMeshGen parameters;
     
@@ -40,6 +32,7 @@ public class OrganismMeshGen extends Organism {
     public static OrganismMeshGen template(ParametersMeshGen parameters) {
         OrganismMeshGen org = new OrganismMeshGen(parameters);
         
+        //Initialize organism vertexes
         for(int i=0;i<parameters.organismNumVertexes;i++) {
             org.vertexes.add(parameters.random.nextFloat() * 2 - 1);
             org.vertexes.add(parameters.random.nextFloat() * 2 - 1);
@@ -48,7 +41,7 @@ public class OrganismMeshGen extends Organism {
             org.uvs.add(0.0f);
             org.uvs.add(0.0f);
         }
-        
+        //Initialize organism texture
         for(int i=0;i<org.texture.length;i++) {
             org.texture[i] = 0xFF000000;
         }
@@ -68,11 +61,16 @@ public class OrganismMeshGen extends Organism {
         return texture.clone();
     }
 
+    /**
+     * Mutate the organism
+     * This mutates both Vertexes, UVs and Texture
+     * @return The mutated organism
+     */
     @Override
     public Organism mutate() {
         OrganismMeshGen newOrg = this.clone();
         
-        
+        //Mutate vertexes
         if(parameters.mutateVertexes){
             for(int i=0;i<newOrg.vertexes.size();i++) {
                 if(parameters.random.nextFloat() < parameters.evolutionMutationChance) {
@@ -82,6 +80,7 @@ public class OrganismMeshGen extends Organism {
             }
         }
         
+        //Mutate UVs
         if(parameters.mutateUVs){
             for(int i=0;i<newOrg.uvs.size();i++) {
                 if(parameters.random.nextFloat() < parameters.evolutionMutationChance) {
@@ -91,6 +90,7 @@ public class OrganismMeshGen extends Organism {
             }
         }
         
+        //Mutate texture
         if(parameters.mutateTexture){
             for(int i=0;i<newOrg.texture.length;i++) {
 
@@ -117,6 +117,13 @@ public class OrganismMeshGen extends Organism {
         return newOrg;
     }
 
+    /**
+     * Mate this organism with another organism
+     * 
+     * @param other The organism to mate with this one
+     * @return The child organism
+     * TODO:    Enable more than 1 point crossover
+     */
     @Override
     public Organism[] crossover(Organism other) {
         OrganismMeshGen mate = (OrganismMeshGen)other;
@@ -173,25 +180,20 @@ public class OrganismMeshGen extends Organism {
         max = Math.min(a.texture.length,b.texture.length);
         p = parameters.random.nextInt(max);
         
-        for(int i=0;i<p;i++) {
-            a.texture[i] = this.texture[i];
-        }
-        for(int i=p;i<max;i++) {
-            a.texture[i] = mate.texture[i];
-        }
+        System.arraycopy(this.texture, 0, a.texture, 0, p);
+        System.arraycopy(mate.texture, p, a.texture, p, max - p);
         
-        for(int i=0;i<p;i++) {
-            b.texture[i] = mate.texture[i];
-        }
-        for(int i=p;i<max;i++) {
-            b.texture[i] = this.texture[i];
-        }
+        System.arraycopy(mate.texture, 0, b.texture, 0, p);
+        System.arraycopy(this.texture, p, b.texture, p, max - p);
        
         return new Organism[] { a, b };
     }
 
     
-
+    /**
+     * Clone this organism
+     * @return 
+     */
     @Override
     public OrganismMeshGen clone() {
         OrganismMeshGen newOrg = new OrganismMeshGen(parameters);
@@ -203,11 +205,16 @@ public class OrganismMeshGen extends Organism {
         for(int i=0;i<this.uvs.size();i++) newOrg.uvs.add(this.uvs.get(i));
         
         newOrg.texture = new int[parameters.organismTextureWidth * parameters.organismTextureHeight];
-        for(int i=0;i<this.texture.length;i++) newOrg.texture[i] = this.texture[i];
+        System.arraycopy(this.texture, 0, newOrg.texture, 0, this.texture.length);
         
         return newOrg;
     }
     
+    /**
+     * Generate the model as a shape we can display
+     * @param m Reference to the main loop
+     * @return  The shape
+     */
     public PShape getShape(Main m){
         
         PShape tmp = m.createShape();
