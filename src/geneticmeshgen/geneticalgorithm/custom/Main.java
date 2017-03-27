@@ -70,7 +70,9 @@ public class Main extends PApplet implements EvaluationCallback {
         
         m = this;
         
-        //GA Parameters
+        // GA Parameters
+        // EDIT ALL YOU WANT
+        //======================================================================
         params = new ParametersMeshGen();
         
         params.populationSize = 150;
@@ -90,6 +92,7 @@ public class Main extends PApplet implements EvaluationCallback {
         params.mutateTexture = true;
         params.mutateUVs = true;
         params.mutateVertexes = true;
+        //======================================================================
         
         params.random = new Random();
         
@@ -98,7 +101,7 @@ public class Main extends PApplet implements EvaluationCallback {
         
         previewRot = 0.0f;
         previewSprite = 0;
-        
+
     }
     
     
@@ -126,7 +129,7 @@ public class Main extends PApplet implements EvaluationCallback {
 
                 pushMatrix();
                 
-                background(255, 255, 0);
+                background(255, 255, 0); // Set background to yellow since reference images have a yellow background.
                 ortho();
                 
                 translate(width/2.0f, height/2.0f, 0);
@@ -144,19 +147,18 @@ public class Main extends PApplet implements EvaluationCallback {
         while(!newEpoch);
         
         // Render best organism from this generation
-        {
-            test = (OrganismMeshGen)pop.getBestOrganism();
-            background(sprites[previewSprite]);
 
-            pushMatrix();
-            ortho();
-            translate(width/2.0f, height/2.0f, 0);
-            rotateX(-atan(0.5f));
-            rotateY(previewRot);
-            shape(p);
-            popMatrix();
+        test = (OrganismMeshGen)pop.getBestOrganism();
+        background(sprites[previewSprite]);
+
+        pushMatrix();
+        ortho();
+        translate(width/2.0f, height/2.0f, 0);
+        rotateX(-atan(0.5f));
+        rotateY(previewRot);
+        shape(p);
+        popMatrix();
             
-        }
         if(previewSprite < 3){
          previewRot += PI/2; 
          previewSprite++;
@@ -216,17 +218,24 @@ public class Main extends PApplet implements EvaluationCallback {
      */
     @Override
     public void keyReleased(){
-        if(key == 'u' || key == 'U'){
-            params.mutateUVs = !params.mutateUVs;
-            System.out.println("UV mutation is now " + (params.mutateUVs ? "on" : "off"));
-        }
-        else if(key == 'v' || key == 'V'){
-            params.mutateVertexes = !params.mutateVertexes;
-            System.out.println("Vertex mutation is now " + (params.mutateVertexes ? "on" : "off"));
-        }
-        else if(key == 't' || key == 'T'){
-            params.mutateTexture = !params.mutateTexture;
-            System.out.println("Texture mutation is now " + (params.mutateTexture ? "on" : "off"));
+        switch (key) {
+            case 'u':
+            case 'U':
+                params.mutateUVs = !params.mutateUVs;
+                System.out.println("UV mutation is now " + (params.mutateUVs ? "on" : "off"));
+                break;
+            case 'v':
+            case 'V':
+                params.mutateVertexes = !params.mutateVertexes;
+                System.out.println("Vertex mutation is now " + (params.mutateVertexes ? "on" : "off"));
+                break;
+            case 't':
+            case 'T':
+                params.mutateTexture = !params.mutateTexture;
+                System.out.println("Texture mutation is now " + (params.mutateTexture ? "on" : "off"));
+                break;
+            default:
+                break;
         }
         
     }
