@@ -1,10 +1,27 @@
+/*
+ * Copyright (C) 2017 Vegard Vatn
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package geneticmeshgen.geneticalgorithm.custom;
 
 /**
  * Takes 4 images taken at 90 degree intervals and attempts to generate a 3D Model that
  * fits the supplied images.
  * The fitness is calculated as the difference between the supplied picture and the generated model,
- * this means that fitness will start at a negative number and will work itself up to the maximum of 0.
+ * this means that fitness will start at a negative number and will work itself up towards the maximum of 0.
  * 
  * @author Vegard
  */
@@ -92,7 +109,7 @@ public class Main extends PApplet implements EvaluationCallback {
         noStroke();
         //String[] args = {"Control Window"};
         // control = new ControlWindow(this);
-         //PApplet.runSketch(args, control);
+        //PApplet.runSketch(args, control);
     }
     
     @Override
@@ -151,9 +168,8 @@ public class Main extends PApplet implements EvaluationCallback {
         
     }
     
-    
     /**
-     * Calculate fitness of the 
+     * Calculate fitness of the organism
      * @param sprite
      * @return 
      */
@@ -171,11 +187,6 @@ public class Main extends PApplet implements EvaluationCallback {
         return fitness;
     }
     
-    
-    public static void main(String args[]) {
-        PApplet.main(new String[] {"--present", "geneticmeshgen.geneticalgorithm.custom.Main" });
-    }
-
     /**
      * Finished evaluating a population, print gen number and best fitness
      * @param generation
@@ -219,4 +230,9 @@ public class Main extends PApplet implements EvaluationCallback {
         }
         
     }
+        
+    public static void main(String args[]) {
+        PApplet.main(new String[] {"--present", "geneticmeshgen.geneticalgorithm.custom.Main" });
+    }
 }
+
